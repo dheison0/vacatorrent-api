@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from ..util.datahelper import Dataclass2Dict
 
-
 @dataclass
-class SearchResult(Dataclass2Dict):
+class HomeResult(Dataclass2Dict):
     title: str
-    description: str
+    imdb: float
+    year: int
+    talk_type: str
     thumbnail: str
     url: str
