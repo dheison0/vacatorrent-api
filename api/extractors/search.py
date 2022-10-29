@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 from requests import get
-from ..types.search import SearchResult
+from ..types import SearchResult
 
 
 def get_results(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
     page = get(f'https://vacatorrent.com/torrent-{query}/{page}', timeout=5).text
-    html = BeautifulSoup(page, 'html.parser')
+    html = BeautifulSoup(page, 'lxml')
     raw_results = html.findAll('div', class_='row semelhantes')
     results = []
     for raw in raw_results:

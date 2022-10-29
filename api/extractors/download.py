@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 from requests import get
-from ..types.download import Download, Link
+from ..types import Download, Link
 
 
 def get_download(location: str) -> Download:
     page = get(f'https://vacatorrent.com/{location}', timeout=5).text
-    html = BeautifulSoup(page, 'html.parser')
+    html = BeautifulSoup(page, 'lxml')
     infos = html.find('div', class_='infos')
     sinopse = html.find('p', class_='text-justify')
     links = []

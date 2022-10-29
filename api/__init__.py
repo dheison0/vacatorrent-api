@@ -1,6 +1,6 @@
 from os import getenv
-from flask import Flask
+from sanic import Sanic
 
 PORT = int(getenv("PORT", "5000"))
 
-app = Flask(__name__)
+app = Sanic(__name__)

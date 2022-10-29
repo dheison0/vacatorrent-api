@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 from requests import get
-from ..types.home import HomeResult
+from ..types import HomeResult
 
 
 def get_all() -> list[HomeResult]:
     home = get('https://vacatorrent.com/', timeout=5).text
-    html = BeautifulSoup(home, 'html.parser')
+    html = BeautifulSoup(home, 'lxml')
     raw_results = html.findAll('li', class_='capa_lista text-center')
     home_results = []
     for raw in raw_results:
