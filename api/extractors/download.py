@@ -1,24 +1,27 @@
 from bs4 import BeautifulSoup
-from requests import get
+from .. import SITE
+from ..utils import http_get
 from ..types import Download, Link
 
 
-def get_download(location: str) -> Download:
-    page = get(f'https://vacatorrent.com/{location}', timeout=5).text
-    html = BeautifulSoup(page, 'lxml')
-    infos = html.find('div', class_='infos')
-    sinopse = html.find('p', class_='text-justify')
-    links = []
-    for tag in html.findAll('a', class_="list-group-item list-group-item-success newdawn"):
-        links.append(Link(
-            title=tag.get('title'),
-            url=tag.get('href')
-        ))
+async def get_download(location: str) -> Download:
+    raw, _ = await http_get(f'{SITE}/{location}', timeout=5)
+    root = BeautifulSoup(raw, 'lxml')
+    informations = root.find('div', class_='infos')
+    sinopse = root.find('p', class_='text-justify')
     return Download(
-        title=html.find('h1', class_='t_pagina').text.strip(),
+        title=root.find('h1', class_='t_pagina').text.strip(),
         sinopse=sinopse.text.replace(sinopse.next.text, ''),
-        thumbnail=html.find('img', class_='img-responsive capa_imagem').get('src'),
-        year=int(infos.find('a').text),
-        rating=float(infos.find('span', itemprop='ratingValue').text),
-        links=links
+        thumbnail=root.find('img', class_='img-responsive capa_imagem').get('src'),
+        year=int(informations.find('a').text),
+        rating=float(informations.find('span', itemprop='ratingValue').text),
+        links=extract_links(root)
     )
+
+
+def extract_links(root: BeautifulSoup) -> list[Link]:
+    links = []
+    tag_attrs = {'class': 'list-group-item list-group-item-success newdawn'}
+    for tag in root.findAll('a', tag_attrs):
+        links += [Link(title=tag.get('title'), url=tag.get('href'))]
+    return links
