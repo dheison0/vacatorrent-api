@@ -23,5 +23,5 @@ async def get_recommendation(container: Tag) -> HomeResult:
         year=int(container.find('p').text.split('\r\n\t\t\t\t\t\t')[1]),
         talk_type=container.find('div', class_='idioma_lista').text.strip(),
         thumbnail=container.find('img').get('src'),
-        url=container.find('a').get('href')
+        url=container.find('a').get('href').replace(SITE+'/', '')
     )
