@@ -6,7 +6,7 @@ from ..types import HomeResult
 
 
 async def get_all() -> list[HomeResult]:
-    raw, _ = await http_get(SITE, timeout=5)
+    raw, _ = await http_get(SITE, timeout=15)
     root = BeautifulSoup(raw, 'lxml')
     containers = root.findAll('li', class_='capa_lista text-center')
     home_results = []
@@ -17,8 +17,9 @@ async def get_all() -> list[HomeResult]:
 
 
 async def get_recommendation(container: Tag) -> HomeResult:
+    title = container.find('h2').text.replace('Torrent', '')
     return HomeResult(
-        title=container.find('h2').text,
+        title=title.strip().title(),
         imdb=float(container.find('div', class_='imdb_lista').text),
         year=int(container.find('p').text.split('\r\n\t\t\t\t\t\t')[1]),
         talk_type=container.find('div', class_='idioma_lista').text.strip(),
