@@ -1,7 +1,7 @@
 FROM python:3.10-slim
-RUN useradd -ms vacatorrent
+RUN useradd -md /src vacatorrent
 USER vacatorrent
-WORKDIR /home/vacatorrent
+WORKDIR /src
 COPY . .
 RUN pip install -r requirements.txt
 CMD ["python", "-m", "api"]
