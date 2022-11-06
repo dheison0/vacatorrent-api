@@ -5,16 +5,18 @@ from ..types import Download, Link
 
 
 async def get_download(location: str) -> Download:
-    raw, _ = await http_get(f'{SITE}/{location}', timeout=5)
+    raw, _ = await http_get(f'{SITE}/{location}', timeout=15)
     root = BeautifulSoup(raw, 'lxml')
     informations = root.find('div', class_='infos')
     sinopse = root.find('p', class_='text-justify')
+    title = root.find('h1', class_='t_pagina').text
+    title = title.split('TORRENT')[-1].split('DOWNLOAD')[0].strip()
+    imdb = root.find('div', class_='col-sm-5').find('a', itemprop='sameAs')
     return Download(
-        title=root.find('h1', class_='t_pagina').text.strip(),
+        title=title.title(),
         sinopse=sinopse.text.replace(sinopse.next.text, ''),
         thumbnail=root.find('img', class_='img-responsive capa_imagem').get('src'),
-        year=int(informations.find('a').text),
-        rating=float(informations.find('span', itemprop='ratingValue').text),
+        imdb=float(imdb.text),
         links=extract_links(root)
     )
 
