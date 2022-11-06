@@ -13,8 +13,7 @@ class Download(Dataclass2Dict):
     title: str
     sinopse: str
     thumbnail: str
-    year: int
-    rating: float
+    imdb: float
     links: list[Link]
 
 
