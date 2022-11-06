@@ -6,7 +6,7 @@ from ..types import SearchResult
 
 
 async def search(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
-    raw, _ = await http_get(f'{SITE}/torrent-{query}/{page}', timeout=5)
+    raw, _ = await http_get(f'{SITE}/torrent-{query}/{page}', timeout=15)
     root = BeautifulSoup(raw, 'lxml')
     containers = root.findAll('div', class_='row semelhantes')
     query_results = []
@@ -21,9 +21,12 @@ async def search(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
 
 
 async def get_result(container: Tag):
+    title = container.find('h2').text.split('FILME')[-1].split('ANIME')[-1]
+    title = title.split('DESENHO')[-1].split('TORRENT')[0]
+    description = container.find('p', class_='text-justify')
     return SearchResult(
-        title=container.find('h2').text,
-        description=container.find('p', class_='text-justify').text,
+        title=title.strip().title(),
+        description=description.text.replace(description.next.text, '').strip(),
         thumbnail=container.find('img').get('src'),
-        url=container.find('a').get('href')
+        url=container.find('a').get('href').replace(SITE+'/', '')
     )
