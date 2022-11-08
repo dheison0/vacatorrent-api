@@ -5,8 +5,8 @@ from ..utils import http_get
 from ..types import HomeResult
 
 
-async def get_all() -> list[HomeResult]:
-    raw, _ = await http_get(SITE, timeout=15)
+async def get_all(page: int = 1) -> list[HomeResult]:
+    raw, _ = await http_get(f'{SITE}/-{page}', timeout=15)
     root = BeautifulSoup(raw, 'lxml')
     containers = root.findAll('li', class_='capa_lista text-center')
     home_results = []

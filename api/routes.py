@@ -3,15 +3,16 @@ from sanic import Sanic, Request, json
 from http.server import HTTPStatus
 
 def add_all(server: Sanic):
-    server.add_route(home, '/', methods=["GET"])
+    server.add_route(lambda r: home(r, 1), '/', methods=["GET"])
+    server.add_route(home, '/<page:int>', methods=["GET"])
     server.add_route(search, '/search', methods=["GET"])
-    server.add_route(download, '/download/<name>', methods=["GET"])
+    server.add_route(download, '/download/<name:str>', methods=["GET"])
 
 
-async def home(_):
+async def home(_, page: int):
     "Obtem todos os filmes/series recomendados pelo site"
     try:
-        recommendations = await extractors.home.get_all()
+        recommendations = await extractors.home.get_all(page)
     except Exception as e:
         return json(
             body={'error': f'failed to get homepage recommendations: {str(e)}'},
