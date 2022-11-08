@@ -13,10 +13,13 @@ async def search(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
     for container in containers:
         result = await get_result(container)
         query_results.append(result)
-    pagination = root.find('ul', class_='pagination').findAll('li')
-    has_next = True
-    if pagination[-2].get('class'):
-        has_next = False
+    pagination = root.find('ul', class_='pagination')
+    try:
+        active_page = pagination.find('li', class_='active').find('a')
+        last_page = pagination.findAll('li')[-1].find('a')
+    except AttributeError:
+        raise Exception(f"page {page} of query '{query}' not found")
+    has_next = active_page.get('href') != last_page.get('href')
     return query_results, has_next
 
 
