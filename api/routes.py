@@ -34,19 +34,18 @@ async def search(request: Request):
         )
     page = int(request.args.get("page", "1"))
     try:
-        search_results, has_next = await extractors.search.search(query, page)
+        results, error = await extractors.search.search(query, page)
     except Exception as e:
         return json(
             body={'error': f'failed to search: {str(e)}'},
             status=HTTPStatus.INTERNAL_SERVER_ERROR
         )
+    if error:
+        return json({'error': error}, HTTPStatus.BAD_REQUEST)
     return json(
         body={
-            'page': {
-                'number': page,
-                'has_next': has_next
-            },
-            'results': list(map(lambda r: r.dict(), search_results))
+            'page': {'number': page, 'has_next': results[1]},
+            'results': list(map(lambda r: r.dict(), results[0]))
         },
         status=HTTPStatus.OK
     )

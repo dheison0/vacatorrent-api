@@ -5,7 +5,7 @@ from ..utils import http_get
 from ..types import SearchResult
 
 
-async def search(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
+async def search(query: str, page: int = 1) -> tuple[list[SearchResult] | None, bool | str]:
     raw, _ = await http_get(f'{SITE}/torrent-{query}/{page}', timeout=15)
     root = BeautifulSoup(raw, 'lxml')
     containers = root.findAll('div', class_='row semelhantes')
@@ -14,13 +14,15 @@ async def search(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
         result = await get_result(container)
         query_results.append(result)
     pagination = root.find('ul', class_='pagination')
+    if len(pagination) == 4:
+        return None, "no results for this search"
     try:
         active_page = pagination.find('li', class_='active').find('a')
         last_page = pagination.findAll('li')[-1].find('a')
     except AttributeError:
-        raise Exception(f"page {page} of query '{query}' not found")
+        return None, f"page {page} of query '{query}' not found"
     has_next = active_page.get('href') != last_page.get('href')
-    return query_results, has_next
+    return (query_results, has_next), None
 
 
 async def get_result(container: Tag):
