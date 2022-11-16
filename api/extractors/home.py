@@ -18,9 +18,11 @@ async def get_all(page: int = 1) -> list[HomeResult]:
 
 async def get_recommendation(container: Tag) -> HomeResult:
     title = container.find('h2').text.replace('Torrent', '')
+    imdb = container.find('div', class_='imdb_lista').text
+    imdb = imdb.strip().replace(',', '.')
     return HomeResult(
         title=title.strip().title(),
-        imdb=float(container.find('div', class_='imdb_lista').text),
+        imdb=float(imdb),
         year=int(container.find('p').text.split('\r\n\t\t\t\t\t\t')[1]),
         talk_type=container.find('div', class_='idioma_lista').text.strip(),
         thumbnail=container.find('img').get('src'),
