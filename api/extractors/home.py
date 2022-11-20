@@ -17,14 +17,14 @@ async def get_all(page: int = 1) -> list[HomeResult]:
 
 
 async def get_recommendation(container: Tag) -> HomeResult:
-    title = container.find('h2').text.replace('Torrent', '')
-    imdb = container.find('div', class_='imdb_lista').text
-    imdb = imdb.strip().replace(',', '.')
-    return HomeResult(
-        title=title.strip().title(),
-        imdb=float(imdb),
-        year=int(container.find('p').text.split('\r\n\t\t\t\t\t\t')[1]),
-        talk_type=container.find('div', class_='idioma_lista').text.strip(),
-        thumbnail=container.find('img').get('src'),
-        url=container.find('a').get('href').replace(SITE+'/', '')
-    )
+    title_tag = container.find('h2')
+    title = title_tag.text.replace('Torrent', '').strip().capitalize()
+    imdb_tag = container.find('div', class_='imdb_lista')
+    imdb = (0.0 if not imdb_tag else imdb_tag.text.strip().replace(',', '.'))
+    info = container.find('p').text.split()
+    possible_year = list(filter(lambda i: i.isdecimal(), info))
+    year = (None if not possible_year else int(possible_year[0]))
+    talk_type = container.find('div', class_='idioma_lista').text.strip()
+    thumbnail = container.find('img').get('src')
+    url = container.find('a').get('href').replace(SITE+'/', '')
+    return HomeResult(title, float(imdb), year, talk_type, thumbnail, url)
