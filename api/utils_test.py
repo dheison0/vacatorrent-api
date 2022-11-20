@@ -24,5 +24,6 @@ def test_Dataclass2Dict():
 @pytest.mark.asyncio
 async def test_http_get():
     response, code = await http_get("https://httpbin.org/anything")
-    assert isinstance(response, str) and len(response) > 0
+    assert isinstance(response, str)
+    assert len(response) > 0
     assert code == 200
