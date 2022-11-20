@@ -21,7 +21,7 @@ class Download(Dataclass2Dict):
 class HomeResult(Dataclass2Dict):
     title: str
     imdb: float
-    year: int
+    year: int | None
     talk_type: str
     thumbnail: str
     url: str
