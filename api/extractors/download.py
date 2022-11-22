@@ -16,7 +16,7 @@ async def get_download(location: str) -> Download:
         title=title.title(),
         sinopse=sinopse.text.replace(sinopse.next.text, ''),
         thumbnail=root.find('img', class_='img-responsive capa_imagem').get('src'),
-        imdb=(0.0 if not imdb else float(imdb.text)),
+        imdb=(0.0 if not imdb else float(imdb.text.replace(',', '.'))),
         links=extract_links(root)
     )
 

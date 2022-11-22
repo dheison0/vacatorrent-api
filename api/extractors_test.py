@@ -39,9 +39,13 @@ async def test_search():
 
 @pytest.mark.asyncio
 async def test_download():
-    result = await extractors.download.get_download('velozes-e-furiosos-9-torrent')
-    assert isinstance(result.title, str)
-    assert isinstance(result.sinopse, str)
-    assert isinstance(result.thumbnail, str)
-    assert isinstance(result.imdb, float)
-    assert isinstance(result.links, list) and len(result.links) >= 1
+    results = [
+        await extractors.download.get_download('velozes-e-furiosos-9-torrent'),
+        await extractors.download.get_download('adao-negro-torrent')
+    ]
+    for result in results:
+        assert isinstance(result.title, str)
+        assert isinstance(result.sinopse, str)
+        assert isinstance(result.thumbnail, str)
+        assert isinstance(result.imdb, float)
+        assert isinstance(result.links, list) and len(result.links) >= 1
