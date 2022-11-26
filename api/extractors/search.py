@@ -28,10 +28,10 @@ async def search(query: str, page: int = 1) -> tuple[list[SearchResult] | None, 
 async def get_result(container: Tag):
     title = container.find('h2').text.split('FILME')[-1].split('ANIME')[-1]
     title = title.split('DESENHO')[-1].split('TORRENT')[0]
-    description = container.find('p', class_='text-justify')
+    sinopse = container.find('p', class_='text-justify')
     return SearchResult(
         title=title.strip().title(),
-        description=description.text.replace(description.next.text, '').strip(),
+        sinopse=sinopse.text.replace(sinopse.next.text, '').strip(),
         thumbnail=container.find('img').get('src'),
         url=container.find('a').get('href').replace(SITE+'/', '')
     )

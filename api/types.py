@@ -30,6 +30,6 @@ class HomeResult(Dataclass2Dict):
 @dataclass
 class SearchResult(Dataclass2Dict):
     title: str
-    description: str
+    sinopse: str
     thumbnail: str
     url: str

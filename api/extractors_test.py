@@ -21,7 +21,7 @@ async def test_home():
 async def test_search():
     def check_types(result: types.SearchResult):
         assert isinstance(result.title, str)
-        assert isinstance(result.description, str)
+        assert isinstance(result.sinopse, str)
         assert isinstance(result.thumbnail, str)
         assert isinstance(result.url, str)
     query = 'Velozes e furiosos'
