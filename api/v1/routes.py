@@ -1,32 +1,16 @@
 from . import extractors
 from sanic import Sanic, Request, json
+from sanic.blueprints import Blueprint
 from http.server import HTTPStatus
 
 def registry(server: Sanic):
-    server.add_route(
-        handler=home,
-        uri='/',
-        methods=["GET"],
-        version=1
-    )
-    server.add_route(
-        handler=home,
-        uri='/<page:int>',
-        methods=["GET"],
-        version=1
-    )
-    server.add_route(
-        handler=search,
-        uri='/search',
-        methods=["GET"],
-        version=1
-    )
-    server.add_route(
-        handler=download,
-        uri='/download/<name:str>',
-        methods=["GET"],
-        version=1
-    )
+    v1 = Blueprint('v1', version=1, )
+    api = Blueprint.group(v1, version_prefix="/v")
+    v1.add_route(home, '/', ["GET"])
+    v1.add_route(home, '/<page:int>', ["GET"])
+    v1.add_route(search, '/search', ["GET"])
+    v1.add_route(download, '/download/<name:str>', ["GET"])
+    server.blueprint(api)
 
 
 async def home(_, page: int = 1):
