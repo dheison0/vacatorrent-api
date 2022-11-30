@@ -2,14 +2,34 @@ from . import extractors
 from sanic import Sanic, Request, json
 from http.server import HTTPStatus
 
-def add_all(server: Sanic):
-    server.add_route(lambda r: home(r, 1), '/', methods=["GET"])
-    server.add_route(home, '/<page:int>', methods=["GET"])
-    server.add_route(search, '/search', methods=["GET"])
-    server.add_route(download, '/download/<name:str>', methods=["GET"])
+def registry(server: Sanic):
+    server.add_route(
+        handler=home,
+        uri='/',
+        methods=["GET"],
+        version=1
+    )
+    server.add_route(
+        handler=home,
+        uri='/<page:int>',
+        methods=["GET"],
+        version=1
+    )
+    server.add_route(
+        handler=search,
+        uri='/search',
+        methods=["GET"],
+        version=1
+    )
+    server.add_route(
+        handler=download,
+        uri='/download/<name:str>',
+        methods=["GET"],
+        version=1
+    )
 
 
-async def home(_, page: int):
+async def home(_, page: int = 1):
     "Obtem todos os filmes/series recomendados pelo site"
     try:
         recommendations = await extractors.home.get_all(page)
