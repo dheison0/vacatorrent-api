@@ -3,5 +3,6 @@ from sanic import Sanic
 
 SITE = 'https://vacatorrent.com'
 PORT = int(getenv("PORT", "5000"))
+DEBUG = getenv("DEBUG") is not None
 
-app = Sanic(__name__)
+server = Sanic(__name__)

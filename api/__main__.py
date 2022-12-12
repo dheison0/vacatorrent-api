@@ -1,7 +1,13 @@
-from . import app, PORT
-from . import v1
-from os import getenv
+import logging
+from . import (
+    server, v1,
+    PORT, DEBUG
+)
 
-v1.routes.registry(app)
 
-app.run('0.0.0.0', PORT, debug=getenv("DEBUG") != None)
+v1.routes.add_to_server(server)
+
+if DEBUG:
+    logging.basicConfig(level=logging.INFO)
+
+server.run('0.0.0.0', PORT, debug=DEBUG)
