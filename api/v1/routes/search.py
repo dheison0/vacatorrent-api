@@ -3,8 +3,10 @@ from logging import error
 from sanic import Request, json
 from ..extractors import search as search_extractor
 from ...utils import log_exception
+from ...caching import cache_response
 
 
+@cache_response(300)
 async def handler(request: Request):
     "Procura pelo filme desejado no site"
     query = request.args.get('q')

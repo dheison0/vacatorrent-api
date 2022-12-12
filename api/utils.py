@@ -1,6 +1,6 @@
 from dataclasses import asdict
 from aiohttp import ClientSession
-import logging, traceback, time
+import logging, traceback
 
 class Dataclass2Dict:
     def dict(self) -> dict[str, any]:

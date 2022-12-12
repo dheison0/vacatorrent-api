@@ -1,9 +1,12 @@
 from http import HTTPStatus
-from logging import error, info
+from logging import error
 from sanic import json
 from ..extractors import home as home_extractor
 from ...utils import log_exception
+from ...caching import cache_response
 
+
+@cache_response(60)
 async def handler(_, page: int = 1):
     "Obtem todos os filmes/series recomendados pelo site"
     try:

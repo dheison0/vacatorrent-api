@@ -1,10 +1,12 @@
 from http import HTTPStatus
-from logging import error, info
+from logging import error
 from sanic import json
 from ..extractors import download as download_extractor
 from ...utils import log_exception
+from ...caching import cache_response
 
 
+@cache_response(300)
 async def handler(_, key: str):
     "Obtem as informações de download de um filme/serie"
     try:
