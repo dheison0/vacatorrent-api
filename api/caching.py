@@ -1,10 +1,11 @@
+import gc
 from dataclasses import dataclass
 from functools import wraps
 from random import randint
 from threading import Thread
 from time import sleep, time
+
 from sanic import Request
-import gc
 
 
 @dataclass

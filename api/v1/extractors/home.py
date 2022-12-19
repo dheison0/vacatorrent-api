@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-from ..types import HomeResult
+
 from ... import SITE
 from ...utils import http_get
+from ..types import HomeResult
 
 
 async def get_all(page: int = 1) -> list[HomeResult]:

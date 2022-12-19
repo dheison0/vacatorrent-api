@@ -1,9 +1,10 @@
 from http import HTTPStatus
-from logging import error
+
 from sanic import Request, json
-from ..extractors import search as search_extractor
-from ...utils import log_exception
+
 from ...caching import cache_response
+from ...utils import log_exception
+from ..extractors import search as search_extractor
 
 
 @cache_response(300)
@@ -19,7 +20,6 @@ async def handler(request: Request):
     try:
         results, err_info = await search_extractor.search(query, page)
     except Exception as err:
-        error("Search: query: page={page} q='%s'", query)
         log_exception(err)
         return json(
             body={'error': f'failed to search: {str(err)}'},

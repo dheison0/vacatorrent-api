@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
-from ..types import Download, Link
+
 from ... import SITE
 from ...utils import http_get
+from ..types import Download, Link
 
 
 async def get_download(location: str) -> Download:

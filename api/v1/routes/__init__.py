@@ -1,10 +1,7 @@
-from .. import extractors
-from ...utils import log_exception
-from sanic import Sanic, Request, json
+from sanic import Sanic
 from sanic.blueprints import Blueprint
-from http.server import HTTPStatus
-from . import home, search, download
-import logging
+
+from . import download, home, search
 
 
 def add_to_server(server: Sanic):

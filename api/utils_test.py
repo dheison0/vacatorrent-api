@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from random import randint
-from faker import Faker
+
 import pytest
+from faker import Faker
+
 from .utils import Dataclass2Dict, http_get
 
 

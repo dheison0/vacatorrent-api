@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-from ..types import SearchResult
+
 from ... import SITE
 from ...utils import http_get
+from ..types import SearchResult
 
 
 async def search(query: str, page: int = 1) -> tuple[list[SearchResult] | None, bool | str]:

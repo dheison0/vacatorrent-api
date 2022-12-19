@@ -1,5 +1,7 @@
+import faker
+import pytest
+
 from . import extractors, types
-import pytest, faker
 
 fake = faker.Faker()
 
@@ -15,7 +17,7 @@ async def test_home():
     for i in range(1, 5):
         results = await extractors.home.get_all(i)
         any(map(check_types, results))
-    
+
 
 @pytest.mark.asyncio
 async def test_search():
