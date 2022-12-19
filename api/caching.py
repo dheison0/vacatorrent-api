@@ -3,6 +3,7 @@ from functools import wraps
 from random import randint
 from threading import Thread
 from time import sleep, time
+from sanic import Request
 import gc
 
 
@@ -12,9 +13,8 @@ class Cache:
     data: any
 
 
-STORAGE: dict[int, Cache] = {}
+STORAGE: dict[str, Cache] = {}
 MANAGERS: int = 0
-
 
 def cache_manager():
     """Manage cache storage"""
@@ -31,15 +31,13 @@ def cache_manager():
 
 def cache_response(expire: int = 60):
     def decorator(func):
-        cache_id = randint(1e10, 1e11-1)
-
         @wraps(func)
-        async def wrapper(*args, **kwargs):
-            if cache_id not in STORAGE:
-                response = await func(*args, **kwargs)
-                STORAGE[cache_id] = Cache(time()+expire, response)
+        async def wrapper(request: Request, *args, **kwargs):
+            if request.url not in STORAGE:
+                response = await func(request, *args, **kwargs)
+                STORAGE[request.url] = Cache(time()+expire, response)
                 if len(STORAGE) == 1:
                     Thread(target=cache_manager).start()
-            return STORAGE[cache_id].data
+            return STORAGE[request.url].data
         return wrapper
     return decorator
