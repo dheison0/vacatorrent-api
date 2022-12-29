@@ -1,7 +1,6 @@
 import gc
 from dataclasses import dataclass
 from functools import wraps
-from random import randint
 from threading import Thread
 from time import sleep, time
 
@@ -17,7 +16,7 @@ class Cache:
 STORAGE: dict[str, Cache] = {}
 MANAGERS: int = 0
 
-def cache_manager():
+def cacheManager():
     """Manage cache storage"""
     global  MANAGERS
     MANAGERS += 1
@@ -30,7 +29,7 @@ def cache_manager():
     gc.collect()
 
 
-def cache_response(expire: int = 60):
+def cacheResponse(expire: int = 60):
     def decorator(func):
         @wraps(func)
         async def wrapper(request: Request, *args, **kwargs):
@@ -38,7 +37,7 @@ def cache_response(expire: int = 60):
                 response = await func(request, *args, **kwargs)
                 STORAGE[request.url] = Cache(time()+expire, response)
                 if len(STORAGE) == 1:
-                    Thread(target=cache_manager).start()
+                    Thread(target=cacheManager).start()
             return STORAGE[request.url].data
         return wrapper
     return decorator

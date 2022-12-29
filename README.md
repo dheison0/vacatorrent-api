@@ -4,14 +4,29 @@ Uma API criada usando extração de dados do website [VacaTorrent](http://vacato
 com a biblioteca BeautifulSoup versão 4 e o servidor assíncrono feito usando o framework
 Sanic para obter uma melhor velocidade
 
-## Uso
+## Desenvolvimento: v2
 
-As seguintes rotas para obtenção de dados estão disponiveis na versão 1(todas usam o método GET):
+Regras:
 
-> Os tipos de retorno citados aqui podem ser encontrados no arquivo [api/v1/types.py](https://github.com/dheisom/vacatorrent-api/blob/main/api/v1/types.py#L21).
+  - Usar camel case no lugar de snake case;
+  - Criar classes em cada extrator;
+  - O código deve ser flexivél;
+  - Usar poucos parâmetros em cada função;
+  - Evitar o uso de multiplos blocos embutidos;
+  - Todo retorno da API deve ser padronizado.
+  - Deve ser feita no formato REST Full;
 
-| Rota               | Descrição                                                | Parâmetros                     | Retorno                       |
-| :----------------- | :------------------------------------------------------- | :----------------------------- | :---------------------------- |
-| /v1/home/{page}    | Obtem a página número {page} de recomendações            | Nenhum                         | Lista de HomeResult           |
-| /v1/search         | Procura por algum filme/série/desenho                    | q: Texto, page: Número inteiro | Lista de SearchResult ou erro |
-| /v1/download/{key} | Obtem as informações de download de determinado conteúdo | Nenhum                         | Download ou erro              |
+
+A fazer:
+
+  - [ ] Rota de página inicial:
+    - [ ] Extrair: Título, Gênero, Capa, Ano, Classificação IMDB, URL direta e ID;
+    - [ ] Suportar navegação entre páginas.
+
+  - [ ] Página de download:
+    - [ ] Extrair: Título, Sinopse, Capa, Links magneticos;
+    - [ ] Recolher lista de recomendados.
+
+  - [ ] Página de pesquisa:
+    - [ ] Extrair: Título, Sinopse, Capa, ID;
+    - [ ] Suportar navegação limitada.

@@ -4,18 +4,16 @@ from random import randint
 import pytest
 from faker import Faker
 
-from .utils import Dataclass2Dict, http_get
+from .utils import Dataclass2Dict, httpGet
 
-
-@dataclass
-class Person(Dataclass2Dict):
-    name: str
-    age: int
-
-
-fake = Faker()
 
 def test_Dataclass2Dict():
+    @dataclass
+    class Person(Dataclass2Dict):
+        name: str
+        age: int
+
+    fake = Faker()
     name = fake.name()
     age = randint(1, 100)
     result = Person(name, age).dict()
@@ -24,8 +22,8 @@ def test_Dataclass2Dict():
 
 
 @pytest.mark.asyncio
-async def test_http_get():
-    response, code = await http_get("https://httpbin.org/anything")
+async def test_httpGet():
+    response, code = await httpGet("https://api.ipify.org?format=text")
     assert isinstance(response, str)
-    assert len(response) > 0
+    assert response.count('.') == 3
     assert code == 200

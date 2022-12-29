@@ -1,5 +1,5 @@
-from . import PORT, server, v1
+from . import PORT, server, v2
 
-v1.routes.add_to_server(server)
+v2.addRoutesToServer(server)
 
 server.run('0.0.0.0', port=PORT)
