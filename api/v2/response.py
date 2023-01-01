@@ -10,3 +10,18 @@ class Recommendation:
     rating: float
     url: str
     id: str
+
+
+@dataclass
+class Link:
+    title: str
+    url: str
+
+
+@dataclass
+class Download:
+    title: str
+    sinopse: str
+    rating: float | None
+    thumbnail: str
+    links: list[Link]

@@ -1,12 +1,9 @@
 from bs4 import BeautifulSoup, Tag
+from ..errors import PageNotFound
 from ..response import Recommendation
 from ...utils import httpGet
 from ... import SITE_URL
 import logging
-
-
-class PageNotFound(Exception):
-    pass
 
 
 async def homepageExtract(pageNumber: int = 1) -> list[Recommendation]:
