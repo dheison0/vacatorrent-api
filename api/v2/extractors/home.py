@@ -1,13 +1,13 @@
 from bs4 import BeautifulSoup, Tag
 from ..errors import PageNotFound
-from ..response import Recommendation
-from ...utils import httpGet
+from ..responses import Recommendation
 from ... import SITE_URL
+from ...utils import fetch
 import logging
 
 
 async def homepageExtract(pageNumber: int = 1) -> list[Recommendation]:
-    response, _ = await httpGet(f"{SITE_URL}/-{pageNumber}")
+    response, _ = await fetch(f"{SITE_URL}/-{pageNumber}")
     root = BeautifulSoup(response, 'lxml')
     if root.find('a', href='torrent-indefinida-404'):
         raise PageNotFound(f"Webpage {pageNumber} not found!")
