@@ -1,8 +1,9 @@
-from typing import Callable
-from functools import wraps
 from dataclasses import asdict
-from sanic import json, HTTPResponse
+from functools import wraps
+from typing import Callable
+
 from aiohttp import ClientSession
+from sanic import HTTPResponse, json
 
 
 async def fetch(url: str, *args, **kwargs) -> tuple[str, int]:

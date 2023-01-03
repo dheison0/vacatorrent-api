@@ -1,7 +1,8 @@
-from .download import getDownload
-from ..responses import Download
-from ..errors import PageNotFound
 import pytest
+
+from ..errors import PageNotFound
+from ..responses import Download
+from .download import getDownload
 
 
 @pytest.mark.asyncio

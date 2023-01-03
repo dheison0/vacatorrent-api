@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup, Tag
-from ..errors import PageNotFound
-from ..responses import Recommendation
+
 from ... import SITE_URL
 from ...utils import fetch
+from ..errors import PageNotFound
+from ..responses import Recommendation
 
 
 async def getPage(pageNumber: int = 1) -> list[Recommendation]:

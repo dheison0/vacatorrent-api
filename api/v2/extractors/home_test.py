@@ -1,7 +1,8 @@
-from .home import getPage
-from ..responses import Recommendation
-from ..errors import PageNotFound
 import pytest
+
+from ..errors import PageNotFound
+from ..responses import Recommendation
+from .home import getPage
 
 
 @pytest.mark.asyncio

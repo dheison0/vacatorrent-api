@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+
 from ... import SITE_URL
 from ...utils import fetch
 from ..errors import PageNotFound

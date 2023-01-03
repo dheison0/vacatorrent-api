@@ -5,7 +5,7 @@ from threading import Thread
 from time import sleep, time
 from typing import Any
 
-from sanic import Request, HTTPResponse
+from sanic import HTTPResponse, Request
 
 
 @dataclass
@@ -17,9 +17,10 @@ class Cache:
 STORAGE: dict[str, Cache] = {}
 MANAGERS: int = 0
 
+
 def cacheManager():
     """Manage cache storage"""
-    global  MANAGERS
+    global MANAGERS
     MANAGERS += 1
     while len(STORAGE) > 0 and MANAGERS == 1:
         sleep(1)

@@ -1,7 +1,8 @@
-from .search import getResults
-from ..responses import SearchResult
-from ..errors import PageNotFound
 import pytest
+
+from ..errors import PageNotFound
+from ..responses import SearchResult
+from .search import getResults
 
 
 @pytest.mark.asyncio

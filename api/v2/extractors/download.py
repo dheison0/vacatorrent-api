@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
+
+from ... import SITE_URL
+from ...utils import fetch
 from ..errors import PageNotFound
 from ..responses import Download, Link
-from ...utils import fetch
-from ... import SITE_URL
 
 
 async def getDownload(path: str) -> Download:

@@ -1,4 +1,5 @@
 from sanic import Sanic
+
 from .handlers import home
 
 
