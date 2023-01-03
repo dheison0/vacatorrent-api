@@ -11,7 +11,7 @@ from sanic.request import Request
 @cacheResponse(900)
 @dataclassResponse
 async def handler(req: Request, query: str):
-    page = int(req.args.get('page', 1))
+    page = int(req.args.get('page', 1), 10)
     try:
         result = await search.getResults(query, page)
     except NoResults:
