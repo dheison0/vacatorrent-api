@@ -10,6 +10,7 @@ async def test_getPage():
     assert isinstance(pageOne, list)
     assert len(pageOne) > 0
     assert isinstance(pageOne[0], Recommendation)
+    assert pageOne[0].year > 1000
     pageTwo = await getPage(2)
     assert pageOne != pageTwo
 

@@ -20,7 +20,7 @@ async def getPage(pageNumber: int = 1) -> list[Recommendation]:
 
 class RecommendationExtractor:
     def __init__(self, container: Tag):
-        self.__root = container
+        self._root = container
 
     def extract(self) -> Recommendation:
         return Recommendation(
@@ -34,35 +34,35 @@ class RecommendationExtractor:
         )
 
     def title(self) -> str:
-        tag = self.__root.find('h2')
+        tag = self._root.find('h2')
         title = tag.text.replace('Torrent', '')
         return title.strip()
 
     def genre(self) -> str:
-        tag = self.__root.find('div', class_='info_lista').find('p')
+        tag = self._root.find('div', class_='info_lista').find('p')
         informations = tag.text.split()
         genre = informations[0]
         return genre
 
     def thumbnail(self) -> str:
-        tag = self.__root.find('img')
+        tag = self._root.find('img')
         source: str = tag.get('src')
         return source
 
     def year(self) -> int:
-        tag = self.__root.find('div', class_='info_lista')
+        tag = self._root.find('div', class_='info_lista').find('p')
         informations = tag.text.split()
         year = next(filter(lambda i: i if i.isdecimal()
                     else None, informations))
-        return int(year[-1])
+        return int(year)
 
     def rating(self) -> float:
-        tag = self.__root.find('div', class_='imdb_lista')
+        tag = self._root.find('div', class_='imdb_lista')
         rating = tag.text.strip().replace(',', '.')
         return float(rating)
 
     def url(self) -> str:
-        tag = self.__root.find('a')
+        tag = self._root.find('a')
         url: str = tag.get('href')
         return url
 
