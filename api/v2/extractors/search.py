@@ -28,7 +28,6 @@ class SearchResultExtractor:
             title=self.title(),
             sinopse=self.sinopse(),
             thumbnail=self.thumbnail(),
-            url=self.url(),
             path=self.path()
         )
 
@@ -56,11 +55,7 @@ class SearchResultExtractor:
         thumbnail: str = img.get('src')
         return thumbnail
 
-    def url(self) -> str:
-        url: str = self._root.find('a').get('href')
-        return url
-
     def path(self) -> str:
-        url = self.url()
+        url: str = self._root.find('a').get('href')
         path = url.split('vacatorrent.com/')[-1]
         return path

@@ -20,13 +20,13 @@ Regras:
 A fazer:
 
   - [ ] Rota de página inicial:
-    - [ ] Extrair: Título, Gênero, Capa, Ano, Classificação IMDB, URL direta e ID;
+    - [X] Extrair: Título, Gênero, Capa, Ano, Classificação IMDB, URL direta e path;
     - [ ] Suportar navegação entre páginas.
 
   - [ ] Página de download:
-    - [ ] Extrair: Título, Sinopse, Capa, Links magneticos;
+    - [X] Extrair: Título, Sinopse, Classificação IMDB, Capa e Links magneticos;
     - [ ] Recolher lista de recomendados.
 
   - [ ] Página de pesquisa:
-    - [ ] Extrair: Título, Sinopse, Capa, ID;
+    - [X] Extrair: Título, Sinopse, Capa e path;
     - [ ] Suportar navegação limitada.

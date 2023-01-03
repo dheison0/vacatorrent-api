@@ -9,7 +9,7 @@ class Recommendation:
     year: int
     rating: float
     url: str
-    id: str
+    path: str
 
 
 @dataclass
@@ -32,7 +32,6 @@ class SearchResult:
     title: str
     sinopse: str
     thumbnail: str
-    url: str
     path: str
 
 

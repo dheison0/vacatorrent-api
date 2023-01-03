@@ -31,7 +31,7 @@ class RecommendationExtractor:
             year=self.year(),
             rating=self.rating(),
             url=self.url(),
-            id=self.id()
+            path=self.path()
         )
 
     def title(self) -> str:
@@ -67,7 +67,7 @@ class RecommendationExtractor:
         url: str = tag.get('href')
         return url
 
-    def id(self) -> str:
+    def path(self) -> str:
         url = self.url()
-        id = url.split('vacatorrent.com/')[-1]
-        return id
+        path = url.split('vacatorrent.com/')[-1]
+        return path
