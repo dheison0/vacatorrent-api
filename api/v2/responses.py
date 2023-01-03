@@ -34,3 +34,15 @@ class SearchResult:
     thumbnail: str
     url: str
     path: str
+
+
+@dataclass
+class Response:
+    result: Download | list[Recommendation] | list[SearchResult]
+    ok: bool = True
+
+
+@dataclass
+class Error:
+    message: str
+    ok: bool = False

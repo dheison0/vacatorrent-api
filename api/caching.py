@@ -3,14 +3,15 @@ from dataclasses import dataclass
 from functools import wraps
 from threading import Thread
 from time import sleep, time
+from typing import Any
 
-from sanic import Request
+from sanic import Request, HTTPResponse
 
 
 @dataclass
 class Cache:
     expire: float
-    data: any
+    data: Any
 
 
 STORAGE: dict[str, Cache] = {}
@@ -32,12 +33,14 @@ def cacheManager():
 def cacheResponse(expire: int = 60):
     def decorator(func):
         @wraps(func)
-        async def wrapper(request: Request, *args, **kwargs):
-            if request.url not in STORAGE:
-                response = await func(request, *args, **kwargs)
-                STORAGE[request.url] = Cache(time()+expire, response)
+        async def wrapper(req: Request, *args, **kwargs):
+            if req.url not in STORAGE:
+                response: HTTPResponse = await func(req, *args, **kwargs)
+                if response.status >= 300:
+                    return response
+                STORAGE[req.url] = Cache(time()+expire, response)
                 if len(STORAGE) == 1:
                     Thread(target=cacheManager).start()
-            return STORAGE[request.url].data
+            return STORAGE[req.url].data
         return wrapper
     return decorator

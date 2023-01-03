@@ -3,16 +3,15 @@ from ..errors import PageNotFound
 from ..responses import Recommendation
 from ... import SITE_URL
 from ...utils import fetch
-import logging
 
 
-async def homepageExtract(pageNumber: int = 1) -> list[Recommendation]:
+async def getPage(pageNumber: int = 1) -> list[Recommendation]:
     response, _ = await fetch(f"{SITE_URL}/-{pageNumber}")
     root = BeautifulSoup(response, 'lxml')
     if root.find('a', href='torrent-indefinida-404'):
         raise PageNotFound(f"Webpage {pageNumber} not found!")
     recommendations = root.findAll('li', class_='capa_lista text-center')
-    result = list(filter(
+    result = list(map(
         lambda item: RecommendationExtractor(item).extract(),
         recommendations
     ))
@@ -23,24 +22,16 @@ class RecommendationExtractor:
     def __init__(self, container: Tag):
         self.__root = container
 
-    def extract(self) -> Recommendation | None:
-        try:
-            result = Recommendation(
-                title=self.title(),
-                genre=self.genre(),
-                thumbnail=self.thumbnail(),
-                year=self.year(),
-                rating=self.rating(),
-                url=self.url(),
-                id=self.id()
-            )
-        except Exception as exc:
-            logging.exception(
-                "Call to RecommendationExtractor.extract failed: %s", exc,
-                stack_info=True
-            )
-            return None
-        return result
+    def extract(self) -> Recommendation:
+        return Recommendation(
+            title=self.title(),
+            genre=self.genre(),
+            thumbnail=self.thumbnail(),
+            year=self.year(),
+            rating=self.rating(),
+            url=self.url(),
+            id=self.id()
+        )
 
     def title(self) -> str:
         tag = self.__root.find('h2')

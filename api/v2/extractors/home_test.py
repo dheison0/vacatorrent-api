@@ -1,16 +1,20 @@
+from .home import getPage
+from ..responses import Recommendation
+from ..errors import PageNotFound
 import pytest
-from . import home
 
 
 @pytest.mark.asyncio
-async def test_homepageExtractor():
-    resultOne = await home.homepageExtract(1)
-    resultTwo = await home.homepageExtract(2)
-    assert len(resultOne) > 0 and len(resultTwo) > 0
-    assert resultOne != resultTwo
+async def test_getPage():
+    pageOne = await getPage(1)
+    assert isinstance(pageOne, list)
+    assert len(pageOne) > 0
+    assert isinstance(pageOne[0], Recommendation)
+    pageTwo = await getPage(2)
+    assert pageOne != pageTwo
 
 
 @pytest.mark.asyncio
 async def test_homepageExtractorInvalidPage():
-    with pytest.raises(home.PageNotFound):
-        await home.homepageExtract(-12)
+    with pytest.raises(PageNotFound):
+        await getPage(-12)
