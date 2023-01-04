@@ -28,7 +28,7 @@ async def handler(req: Request):
     query = req.args.get("query")
     if not query:
         return Error("query not specified"), 400
-    page = int(req.args.get('page', 1), 10)
+    page = int(req.args.get('page', 1))
     try:
         result = await search.getResults(query, page)
     except NoResults:
