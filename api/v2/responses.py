@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -36,12 +36,12 @@ class SearchResult:
 
 
 @dataclass
-class Response:
+class Ok:
     result: Download | list[Recommendation] | list[SearchResult]
-    ok: bool = True
+    ok: bool = field(default=True, init=False)
 
 
 @dataclass
 class Error:
     message: str
-    ok: bool = False
+    ok: bool = field(default=False, init=False)

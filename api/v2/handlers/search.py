@@ -1,16 +1,33 @@
 import logging
 
+from sanic.request import Request
+from sanic_ext import openapi
+
 from ...caching import cacheResponse
 from ...utils import dataclassResponse
+from ..errors import NoResults, PageNotFound
 from ..extractors import search
-from ..errors import PageNotFound, NoResults
-from ..responses import Error, Response
-from sanic.request import Request
+from ..responses import Error, Ok, SearchResult
 
 
+class Result(Ok):
+    result: list[SearchResult]
+
+
+@openapi.operation("search")
+@openapi.summary("Procurar")
+@openapi.description("### Procurar por filmes, séries e desenhos")
+@openapi.parameter('query', str, description="O que você deseja procurar", required=True)
+@openapi.parameter('page', int, description="Número da página")
+@openapi.response(200, Result, "Retorna a lista de items encontrados")
+@openapi.response(400, Error, "Página {page} da pesquisa não encontrada")
+@openapi.response(418, Error, "Nenhum resultado foi encontrado")
 @cacheResponse(900)
 @dataclassResponse
-async def handler(req: Request, query: str):
+async def handler(req: Request):
+    query = req.args.get("query")
+    if not query:
+        return Error("query not specified"), 400
     page = int(req.args.get('page', 1), 10)
     try:
         result = await search.getResults(query, page)
@@ -24,4 +41,4 @@ async def handler(req: Request, query: str):
             stack_info=True
         )
         return Error("Internal server error!"), 500
-    return Response(result), 200
+    return Result(result), 200
