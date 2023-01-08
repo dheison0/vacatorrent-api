@@ -8,10 +8,12 @@ from ...utils import dataclassResponse
 from ..errors import NoResults, PageNotFound
 from ..extractors import search
 from ..responses import Error, Ok, SearchResult
+from dataclasses import dataclass
 
-
+@dataclass
 class Result(Ok):
     result: list[SearchResult]
+    has_more: bool
 
 
 @openapi.operation("search")
@@ -30,7 +32,7 @@ async def handler(req: Request):
         return Error("query not specified"), 400
     page = int(req.args.get('page', 1))
     try:
-        result = await search.getResults(query, page)
+        result, hasNextPage = await search.getResults(query, page)
     except NoResults:
         return Error(f"Sorry, we not found any result for your query."), 200
     except PageNotFound:
@@ -41,4 +43,4 @@ async def handler(req: Request):
             stack_info=True
         )
         return Error("Internal server error!"), 500
-    return Result(result), 200
+    return Result(result, hasNextPage), 200

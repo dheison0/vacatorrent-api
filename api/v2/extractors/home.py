@@ -22,15 +22,17 @@ async def getPage(pageNumber: int = 1) -> list[Recommendation]:
 class RecommendationExtractor:
     def __init__(self, container: Tag):
         self._root = container
+        self._hidden = container.find('div', class_='info_list')
+        self._informations = container.find('p').text.split()
 
     def extract(self) -> Recommendation:
         return Recommendation(
             title=self.title(),
             genre=self.genre(),
-            thumbnail=self.thumbnail(),
+            language=self.language(),
             year=self.year(),
             rating=self.rating(),
-            url=self.url(),
+            thumbnail=self.thumbnail(),
             path=self.path()
         )
 
@@ -40,9 +42,7 @@ class RecommendationExtractor:
         return title.strip()
 
     def genre(self) -> str:
-        tag = self._root.find('div', class_='info_lista').find('p')
-        informations = tag.text.split()
-        genre = informations[0]
+        genre = self._informations[0]
         return genre
 
     def thumbnail(self) -> str:
@@ -51,10 +51,10 @@ class RecommendationExtractor:
         return source
 
     def year(self) -> int:
-        tag = self._root.find('div', class_='info_lista').find('p')
-        informations = tag.text.split()
-        year = next(filter(lambda i: i if i.isdecimal()
-                    else None, informations))
+        year = next(filter(
+            lambda i: i if i.isdecimal() else None,
+            self._informations
+        ))
         return int(year)
 
     def rating(self) -> float:
@@ -62,12 +62,11 @@ class RecommendationExtractor:
         rating = tag.text.strip().replace(',', '.')
         return float(rating)
 
-    def url(self) -> str:
-        tag = self._root.find('a')
-        url: str = tag.get('href')
-        return url
-
     def path(self) -> str:
-        url = self.url()
+        url: str = self._root.find('a').get('href')
         path = url.split('vacatorrent.com/')[-1]
         return path
+
+    def language(self) -> str:
+        language = self._root.find('div', class_='idioma_lista').text
+        return language.strip()

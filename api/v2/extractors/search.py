@@ -6,7 +6,7 @@ from ..errors import NoResults, PageNotFound
 from ..responses import SearchResult
 
 
-async def getResults(query: str, page: int = 1) -> list[SearchResult]:
+async def getResults(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
     responseText, _ = await fetch(f"{SITE_URL}/torrent-{query}/{page}")
     root = BeautifulSoup(responseText, 'lxml')
     rawResults = root.findAll('div', class_='row semelhantes')
@@ -18,7 +18,9 @@ async def getResults(query: str, page: int = 1) -> list[SearchResult]:
         lambda item: SearchResultExtractor(item).extract(),
         rawResults
     ))
-    return results
+    pagination = root.find('ul', class_='pagination').findAll('li')
+    hasNextPage = pagination[-2].get("class") is None
+    return results, hasNextPage
 
 
 class SearchResultExtractor:
@@ -46,7 +48,7 @@ class SearchResultExtractor:
         rawSinopse = self._root.find('p', class_='text-justify')
         sinopse: str = rawSinopse.text
         sinopseTitle: str = rawSinopse.next.text
-        # Remove item title
+        # Remove title from sinopse
         sinopse = sinopse.replace(sinopseTitle, '')
         # Remove download suffix of sinopse
         sinopse = sinopse.split('. Baixar')[0]+'.'

@@ -5,10 +5,10 @@ from dataclasses import dataclass, field
 class Recommendation:
     title: str
     genre: str
-    thumbnail: str
+    language: str
     year: int
     rating: float
-    url: str
+    thumbnail: str
     path: str
 
 
