@@ -2,7 +2,7 @@ import logging
 
 from sanic_ext import openapi
 
-from ...caching import cacheResponse
+from ...caching import cache
 from ...utils import dataclassResponse
 from ..errors import PageNotFound
 from ..extractors import download
@@ -19,7 +19,7 @@ class Result(Ok):
 @openapi.parameter("path", str, description="Localização do item no site", location="path", required=True)
 @openapi.response(200, Result, "Retorna as informações de download")
 @openapi.response(404, Error, "Download não encontrado")
-@cacheResponse(900)
+@cache(900)
 @dataclassResponse
 async def handler(_, path: str):
     try:

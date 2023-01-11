@@ -2,7 +2,7 @@ import logging
 
 from sanic_ext import openapi
 
-from ...caching import cacheResponse
+from ...caching import cache
 from ...utils import dataclassResponse
 from ..errors import PageNotFound
 from ..extractors import home
@@ -19,7 +19,7 @@ class Result(Ok):
 @openapi.parameter("page", int, description="Número da página", required=True, location="path")
 @openapi.response(200, Result, "Retorna uma lista de recomendações")
 @openapi.response(404, Error, "Página {page} não encontrada")
-@cacheResponse(300)
+@cache(300)
 @dataclassResponse
 async def handler(_, page: int):
     try:

@@ -3,12 +3,14 @@ import logging
 from sanic.request import Request
 from sanic_ext import openapi
 
-from ...caching import cacheResponse
+from ...caching import cache
 from ...utils import dataclassResponse
 from ..errors import NoResults, PageNotFound
 from ..extractors import search
 from ..responses import Error, Ok, SearchResult
 from dataclasses import dataclass
+from urllib.parse import unquote
+
 
 @dataclass
 class Result(Ok):
@@ -24,12 +26,13 @@ class Result(Ok):
 @openapi.response(200, Result, "Retorna a lista de items encontrados")
 @openapi.response(400, Error, "Página {page} da pesquisa não encontrada")
 @openapi.response(418, Error, "Nenhum resultado foi encontrado")
-@cacheResponse(900)
+@cache(900)
 @dataclassResponse
 async def handler(req: Request):
     query = req.args.get("query")
     if not query:
         return Error("query not specified"), 400
+    query = unquote(query)
     page = int(req.args.get('page', 1))
     try:
         result, hasNextPage = await search.getResults(query, page)

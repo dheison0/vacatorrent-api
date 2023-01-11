@@ -16,6 +16,7 @@ async def fetch(url: str, *args, **kwargs) -> tuple[str, int]:
     response = await session.get(url, *args, **kwargs)
     text = await response.text()
     statusCode = response.status
+    response.close()
     await session.close()
     return text, statusCode
 
