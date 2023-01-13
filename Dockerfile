@@ -1,4 +1,4 @@
-FROM python:3.11-bullseye
+FROM python:3.10.9-bullseye
 RUN useradd -md /src vacatorrent
 USER vacatorrent
 WORKDIR /src
