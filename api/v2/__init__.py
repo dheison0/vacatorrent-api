@@ -1,6 +1,6 @@
 from sanic import Sanic
 
-from .handlers import home, download, search
+from .handlers import download, home, search
 
 
 def addRoutesToServer(server: Sanic):

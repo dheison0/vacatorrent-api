@@ -6,7 +6,7 @@ from ..errors import NoResults, PageNotFound
 from ..responses import SearchResult
 
 
-async def getResults(query: str, page: int = 1) -> tuple[list[SearchResult], bool]:
+async def getResults(query: str, page: int = 1) -> tuple[tuple[SearchResult], bool]:
     responseText, _ = await fetch(f"{SITE_URL}/torrent-{query}/{page}")
     root = BeautifulSoup(responseText, 'lxml')
     rawResults = root.findAll('div', class_='row semelhantes')
@@ -14,7 +14,7 @@ async def getResults(query: str, page: int = 1) -> tuple[list[SearchResult], boo
         raise NoResults(f"No results for query '{query}'")
     elif not rawResults:
         raise PageNotFound(f'Page {page} of search "{query}" not found')
-    results = list(map(
+    results = tuple(map(
         lambda item: SearchResultExtractor(item).extract(),
         rawResults
     ))
@@ -41,7 +41,8 @@ class SearchResultExtractor:
         # Remove suffix
         title = title.split('torrent')[0].split('download')[0]
         # Remove prefix
-        title = title.split('série')[-1].split('filme')[-1].split('desenho')[-1]
+        title = title.split(
+            'série')[-1].split('filme')[-1].split('desenho')[-1]
         return title.strip().capitalize()
 
     def sinopse(self) -> str:

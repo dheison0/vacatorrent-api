@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from ... import SITE_URL
 from ...utils import fetch
 from ..errors import PageNotFound
-from ..responses import Download, Link
+from ..responses import Download, MagnetLink
 
 
 async def getDownload(path: str) -> Download:
@@ -54,13 +54,13 @@ class DownloadExtractor:
         thumbnail: str = tag.get('src')
         return thumbnail
 
-    def links(self) -> list[Link]:
+    def links(self) -> tuple[MagnetLink]:
         rawLinks = self._root.findAll(
             name='a',
             class_='list-group-item list-group-item-success newdawn'
         )
-        links = list(map(
-            lambda item: Link(title=item.text.strip(), url=item.get('href')),
+        links = tuple(map(
+            lambda item: MagnetLink(item.text.strip(), item.get('href')),
             rawLinks
         ))
         return links

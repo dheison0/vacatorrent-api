@@ -13,7 +13,7 @@ class Recommendation:
 
 
 @dataclass
-class Link:
+class MagnetLink:
     title: str
     url: str
 
@@ -24,7 +24,7 @@ class Download:
     sinopse: str
     rating: float | None
     thumbnail: str
-    links: list[Link]
+    links: tuple[MagnetLink]
 
 
 @dataclass
@@ -37,7 +37,7 @@ class SearchResult:
 
 @dataclass
 class Ok:
-    result: Download | list[Recommendation] | list[SearchResult]
+    result: Download | tuple[Recommendation] | tuple[SearchResult]
     ok: bool = field(default=True, init=False)
 
 

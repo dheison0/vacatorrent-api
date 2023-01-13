@@ -1,4 +1,6 @@
 import logging
+from dataclasses import dataclass
+from urllib.parse import unquote
 
 from sanic.request import Request
 from sanic_ext import openapi
@@ -8,8 +10,6 @@ from ...utils import dataclassResponse
 from ..errors import NoResults, PageNotFound
 from ..extractors import search
 from ..responses import Error, Ok, SearchResult
-from dataclasses import dataclass
-from urllib.parse import unquote
 
 
 @dataclass

@@ -6,13 +6,13 @@ from ..errors import PageNotFound
 from ..responses import Recommendation
 
 
-async def getPage(pageNumber: int = 1) -> list[Recommendation]:
+async def getPage(pageNumber: int = 1) -> tuple[Recommendation]:
     response, _ = await fetch(f"{SITE_URL}/-{pageNumber}")
     root = BeautifulSoup(response, 'lxml')
     if root.find('a', href='torrent-indefinida-404'):
         raise PageNotFound(f"Webpage {pageNumber} not found!")
     recommendations = root.findAll('li', class_='capa_lista text-center')
-    result = list(map(
+    result = tuple(map(
         lambda item: RecommendationExtractor(item).extract(),
         recommendations
     ))
