@@ -1,44 +1,63 @@
-import gc
 from dataclasses import dataclass
 from functools import wraps
-from random import randint
 from threading import Thread
 from time import sleep, time
 
-from sanic import Request
+from sanic import HTTPResponse, Request
 
 
 @dataclass
 class Cache:
-    expire: float
-    data: any
+    expiresAt: float
+    response: HTTPResponse
 
 
-STORAGE: dict[str, Cache] = {}
-MANAGERS: int = 0
+storage: dict[str, Cache] = {}
+stopCacheManager: bool = False
+cacheManagerThread: Thread | None = None
 
-def cache_manager():
-    """Manage cache storage"""
-    global  MANAGERS
-    MANAGERS += 1
-    while len(STORAGE) > 0 and MANAGERS == 1:
+
+def start():
+    global cacheManagerThread
+    cacheManagerThread = Thread(name="Cache Manager", target=cacheManager)
+    cacheManagerThread.start()
+
+
+def stop():
+    global stopCacheManager
+    if cacheManagerThread is None:
+        return
+    stopCacheManager = True
+    cacheManagerThread.join()
+
+
+def cacheManager():
+    while not stopCacheManager:
+        for url in tuple(storage.keys()):
+            if storage[url].expiresAt < time():
+                del storage[url]
         sleep(1)
-        for cid, cache in list(STORAGE.items()):
-            if time() >= cache.expire:
-                STORAGE.pop(cid)
-    MANAGERS -= 1
-    gc.collect()
 
 
-def cache_response(expire: int = 60):
+def getCache(url: str) -> HTTPResponse | None:
+    cache = storage.get(url)
+    return cache.response if cache else None
+
+
+def addCache(url: str, expiresIn: int, response: HTTPResponse) -> None:
+    if response.status < 300:
+        storage[url] = Cache(time()+expiresIn, response)
+
+
+def cache(expiresIn: int = 60):
     def decorator(func):
         @wraps(func)
-        async def wrapper(request: Request, *args, **kwargs):
-            if request.url not in STORAGE:
-                response = await func(request, *args, **kwargs)
-                STORAGE[request.url] = Cache(time()+expire, response)
-                if len(STORAGE) == 1:
-                    Thread(target=cache_manager).start()
-            return STORAGE[request.url].data
+        async def wrapper(req: Request, *args, **kwargs) -> HTTPResponse:
+            cachedResponse = getCache(req.url)
+            if cachedResponse:
+                return cachedResponse
+            response = await func(req, *args, **kwargs)
+            addCache(req.url, expiresIn, response)
+            return response
         return wrapper
     return decorator

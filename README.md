@@ -1,17 +1,38 @@
 # VacaTorrent API
 
-Uma API criada usando extração de dados do website [VacaTorrent](http://vacatorrent.com)
-com a biblioteca BeautifulSoup versão 4 e o servidor assíncrono feito usando o framework
-Sanic para obter uma melhor velocidade
+Uma API criada usando extração de dados do website [VacaTorrent] com a
+biblioteca BeautifulSoup versão 4 e o servidor assíncrono feito usando o
+framework Sanic para obter uma melhor velocidade.
 
-## Uso
 
-As seguintes rotas para obtenção de dados estão disponiveis na versão 1(todas usam o método GET):
+## Colocando a API online
 
-> Os tipos de retorno citados aqui podem ser encontrados no arquivo [api/v1/types.py](https://github.com/dheisom/vacatorrent-api/blob/main/api/v1/types.py#L21).
+Para iniciar a API em um servidor você precisa do docker e clonar esse
+repositório, dentro da pasta dele rode o comando:
 
-| Rota               | Descrição                                                | Parâmetros                     | Retorno                       |
-| :----------------- | :------------------------------------------------------- | :----------------------------- | :---------------------------- |
-| /v1/home/{page}    | Obtem a página número {page} de recomendações            | Nenhum                         | Lista de HomeResult           |
-| /v1/search         | Procura por algum filme/série/desenho                    | q: Texto, page: Número inteiro | Lista de SearchResult ou erro |
-| /v1/download/{key} | Obtem as informações de download de determinado conteúdo | Nenhum                         | Download ou erro              |
+```bash
+docker build -t vacatorrent .
+```
+
+E espere a criação da imagem, logo após isso inicie o container como daemon e
+exporte a porta 5000 para fora do container, com isso você vai ter acesso a
+API fora do containner.
+
+Exemplo:
+
+```bash
+docker run -d \
+  --name vacatorrent \
+  -p 1337:5000 \
+  vacatorrent:latest
+```
+
+
+## Documentação
+
+A API possui uma página de documentação localizada em `/docs/redoc` e
+`/docs/swagger` com a descrição de cada chamada possivel de ser feita e seus
+valores de retorno conforme cada código de status.
+
+
+[VacaTorrent]: <http://vacatorrent.com>
