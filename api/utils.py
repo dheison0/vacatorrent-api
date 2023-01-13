@@ -11,6 +11,8 @@ async def fetch(url: str, *args, **kwargs) -> tuple[str, int]:
     Fetch data from url using GET method
 
     Returns response text and status code
+      :param *args is direct passed to aiohttp.ClientSession.get method
+      :param **kwargs is direct passed to aiohttp.ClientSession.get method
     """
     session = ClientSession()
     response = await session.get(url, *args, **kwargs)
