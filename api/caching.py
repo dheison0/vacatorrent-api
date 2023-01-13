@@ -25,7 +25,7 @@ def start():
 
 def stop():
     global stopCacheManager
-    if cacheManagerThread == None:
+    if cacheManagerThread is None:
         return
     stopCacheManager = True
     cacheManagerThread.join()
@@ -33,25 +33,23 @@ def stop():
 
 def cacheManager():
     while not stopCacheManager:
-        for url, cache in list(storage.items()):
-            if cache.expiresAt < time():
+        for url in tuple(storage.keys()):
+            if storage[url].expiresAt < time():
                 del storage[url]
         sleep(1)
 
 
 def getCache(url: str) -> HTTPResponse | None:
-    if url not in storage:
-        return None
-    return storage[url].response
+    cache = storage.get(url)
+    return cache.response if cache else None
 
 
-def addCache(url: str, expiresIn: int, response: HTTPResponse):
-    if response.status >= 300:
-        return
-    storage[url] = Cache(time()+expiresIn, response)
+def addCache(url: str, expiresIn: int, response: HTTPResponse) -> None:
+    if response.status < 300:
+        storage[url] = Cache(time()+expiresIn, response)
 
 
-def cache(expires: int = 60):
+def cache(expiresIn: int = 60):
     def decorator(func):
         @wraps(func)
         async def wrapper(req: Request, *args, **kwargs) -> HTTPResponse:
@@ -59,7 +57,7 @@ def cache(expires: int = 60):
             if cachedResponse:
                 return cachedResponse
             response = await func(req, *args, **kwargs)
-            addCache(req.url, expires, response)
+            addCache(req.url, expiresIn, response)
             return response
         return wrapper
     return decorator
