@@ -1,32 +1,38 @@
 # VacaTorrent API
 
-Uma API criada usando extração de dados do website [VacaTorrent](http://vacatorrent.com)
-com a biblioteca BeautifulSoup versão 4 e o servidor assíncrono feito usando o framework
-Sanic para obter uma melhor velocidade
-
-## Desenvolvimento: v2
-
-Regras:
-
-  - Usar camel case no lugar de snake case;
-  - Criar classes em cada extrator;
-  - O código deve ser flexivél;
-  - Usar poucos parâmetros em cada função;
-  - Evitar o uso de multiplos blocos embutidos;
-  - Todo retorno da API deve ser padronizado.
-  - Deve ser feita no formato REST Full;
+Uma API criada usando extração de dados do website [VacaTorrent] com a
+biblioteca BeautifulSoup versão 4 e o servidor assíncrono feito usando o
+framework Sanic para obter uma melhor velocidade.
 
 
-A fazer:
+## Colocando a API online
 
-  - [ ] Rota de página inicial:
-    - [X] Extrair: Título, Gênero, Capa, Ano, Classificação IMDB, URL direta e path;
-    - [ ] Suportar navegação entre páginas.
+Para iniciar a API em um servidor você precisa do docker e clonar esse
+repositório, dentro da pasta dele rode o comando:
 
-  - [ ] Página de download:
-    - [X] Extrair: Título, Sinopse, Classificação IMDB, Capa e Links magneticos;
-    - [ ] Recolher lista de recomendados.
+```bash
+docker build -t vacatorrent .
+```
 
-  - [ ] Página de pesquisa:
-    - [X] Extrair: Título, Sinopse, Capa e path;
-    - [ ] Suportar navegação limitada.
+E espere a criação da imagem, logo após isso inicie o container como daemon e
+exporte a porta 5000 para fora do container, com isso você vai ter acesso a
+API fora do containner.
+
+Exemplo:
+
+```bash
+docker run -d \
+  --name vacatorrent \
+  -p 1337:5000 \
+  vacatorrent:latest
+```
+
+
+## Documentação
+
+A API possui uma página de documentação localizada em `/docs/redoc` e
+`/docs/swagger` com a descrição de cada chamada possivel de ser feita e seus
+valores de retorno conforme cada código de status.
+
+
+[VacaTorrent]: <http://vacatorrent.com>
