@@ -6,6 +6,10 @@ from time import sleep, time
 from sanic import HTTPResponse, Request
 
 
+class InvalidCacheTime(Exception):
+    pass
+
+
 @dataclass
 class Cache:
     expiresAt: float
@@ -50,6 +54,8 @@ def addCache(url: str, expiresIn: int, response: HTTPResponse) -> None:
 
 
 def cache(expiresIn: int = 60):
+    if expiresIn < 1:
+        raise InvalidCacheTime('Invalid time to cache response')
     def decorator(func):
         @wraps(func)
         async def wrapper(req: Request, *args, **kwargs) -> HTTPResponse:
@@ -57,7 +63,8 @@ def cache(expiresIn: int = 60):
             if cachedResponse:
                 return cachedResponse
             response = await func(req, *args, **kwargs)
-            addCache(req.url, expiresIn, response)
+            if response:
+                addCache(req.url, expiresIn, response)
             return response
         return wrapper
     return decorator
